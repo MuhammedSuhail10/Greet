@@ -10,7 +10,7 @@ const InfoHeader = () => {
     const theme = useTheme();
     const styles = StyleSheet.create({
         image: {
-            height: hp(70),
+            height: hp(65),
             borderBottomLeftRadius: 40,
             borderBottomRightRadius: 40,
             width: '100%',

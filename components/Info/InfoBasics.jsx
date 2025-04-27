@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { useTheme } from '../../constants/theme'
+import { wp } from '../../helpers/common';
 
 const InfoBasics = () => {
     const theme = useTheme();
@@ -36,20 +37,20 @@ const InfoBasics = () => {
                         <Text style={{ ...styles.text, fontSize: 25 }}> ⚥</Text>
                         <Text style={{ ...styles.text }}>  Single</Text>
                     </View>
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                        <Text style={{ ...styles.text, }}> 🟢  Only chat, Available for meet and chat</Text>
+                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', }}>
+                        <Text style={{ ...styles.text, }}> 📏  5'4"</Text>
                     </View>
                 </View>
-                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', }}>
+                    <Text style={{ ...styles.text, }}> 🟢 Available for meet and chat</Text>
+                </View>
+                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 6  }}>
                     <Text style={{ ...styles.text, }}> 🚬 Occational Smoker</Text>
                 </View>
                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 6 }}>
                     <Text style={{ ...styles.text, }}> 🥂  Occational Drinker</Text>
                 </View>
                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 30, marginTop: 6 }}>
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', }}>
-                        <Text style={{ ...styles.text, }}> 📏  5'4"</Text>
-                    </View>
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ ...styles.text, }}> 🚀 Long time relation</Text>
                     </View>

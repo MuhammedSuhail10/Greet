@@ -119,10 +119,10 @@ const login = ({ navigation }) => {
     if (!phone) { const alert = createTwoButtonAlert("Login Error", "Phone number is required", "OK"); console.log("first"); return; }
     if (phone.length < 10) { setError("Phone number should be 10 digits"); return; }
 
-
-    // Send OTP API
-
-    router.push("/auth/otp");
+    router.push({
+      pathname: "/auth/otp",
+      query: { phone: phone } // Pass phone number as query parameter if needed
+    });
   };
 
   return (

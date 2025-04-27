@@ -31,7 +31,8 @@ const InfoBio = () => {
     return (
         <View style={styles.main}>
             <View style={styles.sub}>
-                <Icon name="bio" fill={theme.colors.primary} size="40" strokeWidth="1" />
+                <Text style={{ ...styles.text, fontSize: 21, fontWeight: theme.fontWeights.medium }}>Bio</Text>
+                {/* <Icon name="bio" fill={theme.colors.primary} size="40" strokeWidth="1" /> */}
                 <Text style={{ ...styles.text }}>kds dfik df ff d dg b dfvb df fvdf vdfv vf vdfv fv fv df vdf vfbv fbv fvdfv  ffv </Text>
             </View>
         </View>
