@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -15,14 +15,21 @@ import { hp, isDarkMode, wp } from '../../helpers/common';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from '../../assets/icons';
-import { createTwoButtonAlert } from './../../helpers/alert';
+import { sendOtp } from '../../services/userService';
+import SnackBar from '../../components/SnackBar';
+import { useDispatch } from 'react-redux';
+import { addPhone } from '../../stores/phoneSlice';
 
 const login = ({ navigation }) => {
+  const dispatch = useDispatch();
   const dark = isDarkMode();
   const theme = useTheme();
   const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
   const [enable, setEnabled] = useState(false);
+  const [enableKB, setEnabledKB] = useState(true);
+  const [snackVisible, setSnackVisible] = useState(false);
+  const [snackKey, setSnackKey] = useState(0);
 
   const styles = StyleSheet.create({
     container: {
@@ -32,10 +39,11 @@ const login = ({ navigation }) => {
     content: {
       display: 'flex',
       alignItems: 'center',
-      marginTop: 30,
+      marginTop: hp(10),
       padding: 10
     },
     title: {
+      padding: 4,
       color: theme.colors.text,
       fontSize: hp(4),
       fontFamily: 'Poppins',
@@ -62,12 +70,6 @@ const login = ({ navigation }) => {
       // borderColor: theme.colors.text,
       borderWidth: 0,
     },
-    // iconContainer: {
-    //   padding: 30,
-    //   backgroundColor: '#EFF6FF',
-    //   borderRadius: 50,
-    //   marginBottom: 24,
-    // },
     countryCode: {
       fontSize: 20,
       fontWeight: '500',
@@ -92,7 +94,7 @@ const login = ({ navigation }) => {
       borderRadius: 12,
       paddingVertical: 16,
       paddingHorizontal: 24,
-      width: wp(30),
+      width: wp(40),
       maxWidth: 400,
       alignSelf: 'flex-end',
       marginInline: 32,
@@ -106,7 +108,6 @@ const login = ({ navigation }) => {
   });
 
   const handlePhoneChange = (value) => {
-    setError("");
     const numericValue = value.replace(/[^0-9]/g, '');
     if (numericValue.length <= 10) {
       setPhone(numericValue)
@@ -116,12 +117,20 @@ const login = ({ navigation }) => {
   };
 
   const handlelogin = async () => {
-    if (!phone) { const alert = createTwoButtonAlert("Login Error", "Phone number is required", "OK"); console.log("first"); return; }
-    if (phone.length < 10) { setError("Phone number should be 10 digits"); return; }
-
+    setEnabled(false);
+    setEnabledKB(false);
+    const status = await sendOtp({ phone });
+    console.log("status: ", status)
+    setEnabledKB(true);
+    setEnabled(true);
+    if (status != 200) {
+      setSnackVisible(true);
+      setSnackKey(Date.now());
+    }
+    dispatch(addPhone(phone));
     router.push({
       pathname: "/auth/otp",
-      query: { phone: phone } // Pass phone number as query parameter if needed
+      query: { phone: phone }
     });
   };
 
@@ -147,15 +156,17 @@ const login = ({ navigation }) => {
               keyboardType="number-pad"
               placeholder=""
               maxLength={10}
+              editable={enableKB ? true : false}
             />
           </View>
           <TouchableOpacity onPress={() => handlelogin()} style={[styles.button, !enable && styles.buttonDisabled]} disabled={!enable}>
-            <Text style={styles.buttonText}>Continue</Text>
+            <Text style={styles.buttonText}>Send OTP</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+      {snackVisible && <SnackBar key={snackKey} text="Something went wrong, please try again." />}
     </SafeAreaView >
   );
 };
 
-export default login
+export default login;

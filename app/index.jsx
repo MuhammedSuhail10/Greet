@@ -7,6 +7,8 @@ import { Redirect, useRouter } from 'expo-router'
 import { PaperProvider } from 'react-native-paper'
 import { useFonts } from 'expo-font'
 import Loader from './../components/Loader';
+import { Provider } from 'react-redux'
+import store from '../stores/store'
 
 const index = () => {
   const theme = useTheme();
@@ -20,18 +22,20 @@ const index = () => {
   const router = useRouter();
   useEffect(() => {
     const timeout = setTimeout(() => {
-      router.replace('/home');
-      // router.replace('/landing/landing_1');
+      // router.replace('/home');
+      router.replace('/landing/landing_1');
     }, 1000);
     return () => clearTimeout(timeout);
   }, [router]);
   return (
-    <PaperProvider>
-      <SafeAreaView style={styles.bg}>
-        <StatusBar style={dark ? 'light' : 'dark'} />
-        <Loader />
-      </SafeAreaView>
-    </PaperProvider>
+    <Provider store={store}>
+      <PaperProvider>
+        <SafeAreaView style={styles.bg}>
+          <StatusBar style={dark ? 'light' : 'dark'} />
+          <Loader />
+        </SafeAreaView>
+      </PaperProvider>
+    </Provider>
   )
 }
 

@@ -13,8 +13,9 @@ import {
 import Icon from '../../assets/icons';
 import { hp, isDarkMode, wp } from '../../helpers/common';
 import { useTheme } from '../../constants/theme';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { createTwoButtonAlert } from '../../helpers/alert';
+import { useSelector } from 'react-redux';
 // import { CheckCircle } from 'lucide-react-native';
 
 const otp = () => {
@@ -23,6 +24,8 @@ const otp = () => {
     const [otp, setOtp] = useState(['', '', '', '']);
     const [timer, setTimer] = useState(30);
     const inputRefs = useRef([]);
+    const phone = useSelector(phoneDetails);
+    console.log(phone);
 
     useEffect(() => {
         const countdown = timer > 0 && setInterval(() => setTimer(timer - 1), 1000);
@@ -129,22 +132,26 @@ const otp = () => {
             if (value !== '' && index < 3) inputRefs.current[index + 1].focus();
         }
     };
+    const isOtpComplete = otp.every(digit => digit !== '');
+    const handleResendOtp = () => {
+        setTimer(30);
+    };
 
     const handleKeyPress = (e, index) => {
         if (e.nativeEvent.key === 'Backspace' && index > 0 && otp[index] === '') {
             inputRefs.current[index - 1].focus();
         }
     };
-
-    const isOtpComplete = otp.every(digit => digit !== '');
-
-    const handleResendOtp = () => {
-        setTimer(30);
-    };
-
+ 
     const verifyOTP = async () => {
         if (!otp.length === 4) { return; }
-        console.log("otp is", otp)
+        console.log("Phone: ", phone)
+        const otpString = otp.join('');
+        otp.forEach(element => {
+            otpString += element;
+        });
+        const status = await verifyOTP({ phone: phone, otp: otpString });
+        console.log("status: ", status) 
         router.replace("/details/personal");
     }
 
@@ -156,13 +163,9 @@ const otp = () => {
                 style={styles.keyboardAvoid}
             >
                 <View style={styles.content}>
-                    <View style={styles.iconContainer}>
-                        <Icon name="phone" size="80" strokeWidth="1" />
-                    </View>
+                    <View style={styles.iconContainer}><Icon name="phone" size="80" strokeWidth="1" /> </View>
                     <Text style={styles.title}>Otp verification</Text>
-                    <Text style={styles.subtitle}>
-                        We've sent a verification code to your phone
-                    </Text>
+                    <Text style={styles.subtitle}>We've sent a verification code to {phone}</Text>
                     <View style={styles.otpContainer}>
                         {otp.map((digit, index) => (
                             <TextInput
