@@ -1,128 +1,314 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import React, { useState } from 'react'
-import { useTheme } from '../../constants/theme';
-import { hp, isDarkMode, wp } from '../../helpers/common';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { StatusBar } from 'expo-status-bar';
-import ImageViewer from '../../components/ImageViewer';
-import { useFonts } from 'expo-font';
-import * as ImagePicker from 'expo-image-picker';
-import { router } from 'expo-router';
+import { useTheme } from '../../constants/theme'
+import { hp, isDarkMode, wp } from '../../helpers/common'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { StatusBar } from 'expo-status-bar'
+import ImageViewer from '../../components/ImageViewer'
+import { useFonts } from 'expo-font'
+import * as ImagePicker from 'expo-image-picker'
+import { router } from 'expo-router'
+import { Icon, ProgressBar, ActivityIndicator } from 'react-native-paper'
+import { LinearGradient } from 'expo-linear-gradient'
 
 const profile_image = () => {
-    const dark = isDarkMode();
-    const theme = useTheme();
+    const dark = isDarkMode()
+    const theme = useTheme()
     const [loaded, error] = useFonts({
         'Outfit': require('../../assets/fonts/Outfit.ttf'),
         'Poppins': require('../../assets/fonts/Poppins.ttf'),
-    });
+    })
+
+    const [selected, setSelected] = useState(false)
+    const [selectedImage, setSelectedImage] = useState(undefined)
+    const [uploading, setUploading] = useState(false)
+
+    const PlaceholderImage = 'https://imgs.search.brave.com/awksT_Zoh8G9Qn5d-CbZP4gAPcl0EDxLP0J88fgAnB4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNTg3/ODA1MTU2L3ZlY3Rv/ci9wcm9maWxlLXBp/Y3R1cmUtdmVjdG9y/LWlsbHVzdHJhdGlv/bi5qcGc_cz02MTJ4/NjEyJnc9MCZrPTIw/JmM9Z2t2TERDZ3NI/SC04SGVRZTdKc2po/bE9ZNnZSQkprX3NL/VzlseWFMZ21Mbz0'
+
     const styles = StyleSheet.create({
         container: {
             flex: 1,
             backgroundColor: theme.colors.primaryBg,
         },
-        text: {
+        headerContainer: {
+            paddingHorizontal: wp(5),
+            paddingTop: hp(1),
+            paddingBottom: hp(2),
+        },
+        progressContainer: {
+            marginTop: 10,
+            marginBottom: 10,
+        },
+        progressText: {
             color: theme.colors.text,
             fontFamily: 'Outfit',
-            fontSize: 35,
-            marginTop: 10,
+            fontSize: 14,
+            marginBottom: 6,
+            opacity: 0.8,
+            textAlign: 'right',
+        },
+        progressBar: {
+            height: 6,
+            borderRadius: 3,
         },
         title: {
             color: theme.colors.text,
-            fontSize: hp(4),
+            fontSize: hp(3.5),
             fontFamily: 'Poppins',
-            fontWeight: 700,
-            marginTop: 10,
-            paddingInline: 20
+            fontWeight: '700',
         },
         description: {
-            paddingInline: 20,
             color: theme.colors.text,
             fontFamily: 'Outfit',
             fontSize: hp(1.8),
-            marginBlock: 5,
+            marginTop: hp(1),
+            opacity: 0.8,
+            lineHeight: hp(2.5),
+        },
+        contentContainer: {
+            flex: 1,
+            alignItems: 'center',
+            paddingHorizontal: wp(5),
+        },
+        imageContainer: {
+            marginTop: hp(4),
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        imageWrapper: {
+            width: hp(35),
+            height: hp(35),
+            borderRadius: hp(17.5),
+            overflow: 'hidden',
+            backgroundColor: theme.colors.secondaryBg,
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+            borderWidth: 3,
+            borderColor: theme.colors.primary + '40',
+        },
+        image: {
+            width: '100%',
+            height: '100%',
+            borderRadius: hp(17.5),
+        },
+        placeholderIcon: {
+            opacity: 0.5,
+        },
+        editButtonContainer: {
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            backgroundColor: theme.colors.primary,
+            width: hp(7),
+            height: hp(7),
+            borderRadius: hp(3.5),
+            alignItems: 'center',
+            justifyContent: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.2,
+            shadowRadius: 5,
+            elevation: 5,
+        },
+        tipContainer: {
+            marginTop: hp(4),
+            padding: hp(2),
+            backgroundColor: theme.colors.secondaryBg + '80',
+            borderRadius: 12,
+            flexDirection: 'row',
+            alignItems: 'center',
+            width: '100%',
+        },
+        tipIcon: {
+            marginRight: wp(3),
+        },
+        tipText: {
+            color: theme.colors.text,
+            fontFamily: 'Outfit',
+            fontSize: hp(1.7),
+            flex: 1,
+            opacity: 0.9,
+            lineHeight: hp(2.3),
+        },
+        footerContainer: {
+            padding: wp(5),
+            //   paddingBottom: Platform.OS === 'ios' ? hp(4) : hp(2),
         },
         button: {
-            borderRadius: 10,
-            padding: hp(2),
-            width: wp(80),
-            display: 'flex',
+            borderRadius: 12,
+            paddingVertical: hp(1),
+            width: wp(45),
             alignItems: 'center',
             justifyContent: 'center',
             flexDirection: 'row',
+            overflow: 'hidden',
+        },
+        outlineButton: {
             borderColor: theme.colors.primary,
             borderWidth: 1,
-            marginTop: hp(5),
+            marginBottom: hp(1.5),
+        },
+        buttonFill: {
+            backgroundColor: theme.colors.primary,
+            marginBottom: hp(1.5),
+
         },
         buttonLabel: {
             color: theme.colors.primary,
-            fontSize: 20,
-            fontFamily: 'Poppins',
+            fontSize: hp(2),
+            fontFamily: 'Outfit',
+            fontWeight: '600',
         },
-        image: {
-            width: hp(35),
-            height: hp(35),
-            borderRadius: theme.borderRadius.full,
-            marginTop: 30,
+        buttonIcon: {
+            marginRight: wp(2),
         },
-        imageContainer: {
-            marginTop: 1,
-            alignSelf: 'center'
+        buttonContent: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingVertical: hp(1.5),
         },
-        footerContainer: {
-            display: 'flex',
-            padding: 15,
-            justifyContent: 'space-between',
-            flexDirection: 'row'
+        whiteText: {
+            color: '#FFFFFF',
         },
-        halfWidth: { width: wp(42.5) },
+        backButton: {
+            position: 'absolute',
+            top: hp(1.5),
+            left: wp(5),
+            zIndex: 10,
+        },
+        uploadingOverlay: {
+            ...StyleSheet.absoluteFillObject,
+            backgroundColor: 'rgba(0,0,0,0.7)',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 100,
+            borderRadius: hp(17.5),
+        },
+        uploadingText: {
+            color: '#FFFFFF',
+            fontFamily: 'Outfit',
+            fontSize: hp(1.6),
+            marginTop: hp(1),
+        }
     })
-
-    const [selected, useSelect] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(undefined);
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ['images'],
             allowsEditing: true,
-            quality: 1,
+            quality: 0.8,
             aspect: [1, 1],
-        });
-
+        })
         if (!result.canceled) {
-            console.log(result);
-            setSelectedImage(result.assets[0].uri);
-            useSelect(true);
+            setSelectedImage(result.assets[0].uri)
+            setSelected(true)
         }
-    };
+    }
 
-    const PlaceholderImage = 'https://imgs.search.brave.com/awksT_Zoh8G9Qn5d-CbZP4gAPcl0EDxLP0J88fgAnB4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNTg3/ODA1MTU2L3ZlY3Rv/ci9wcm9maWxlLXBp/Y3R1cmUtdmVjdG9y/LWlsbHVzdHJhdGlv/bi5qcGc_cz02MTJ4/NjEyJnc9MCZrPTIw/JmM9Z2t2TERDZ3NI/SC04SGVRZTdKc2po/bE9ZNnZSQkprX3NL/VzlseWFMZ21Mbz0';
+    const takePhoto = async () => {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync()
+        if (status !== 'granted') {
+            alert('Sorry, we need camera permissions to make this work!')
+            return;
+        }
+        let result = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            quality: 0.8,
+            aspect: [1, 1],
+        })
+        if (!result.canceled) {
+            setSelectedImage(result.assets[0].uri)
+            setSelected(true)
+        }
+    }
 
     const uploadProfile = async () => {
-        router.push('/details/success')
+        setUploading(true)
+        setTimeout(() => {
+            setUploading(false)
+            router.push('/details/success')
+        }, 1500)
     }
 
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar style={dark ? 'light' : 'dark'} />
-            <Text style={styles.title}>Profile Image</Text>
-            <Text style={styles.description}>Your profile image helps other users recognize you. Choose a clear photo that best represents you.</Text>
-            <View style={styles.imageContainer}>
-                <ImageViewer imgSource={PlaceholderImage} selectedImage={selectedImage} style={styles.image} />
+            <View style={styles.headerContainer}>
+                <View style={styles.progressContainer}>
+                    <Text style={styles.progressText}>Step 2 of 2</Text>
+                    <ProgressBar progress={1} color={theme.colors.primary} style={styles.progressBar} />
+                </View>
+                <Text style={styles.title}>Profile Image</Text>
+                <Text style={styles.description}> Your profile image is the first thing people see. Choose a photo that clearly shows your face and represents you well.</Text>
             </View>
-            {selected ? <View style={styles.footerContainer}>
-                <Pressable style={[styles.button, styles.halfWidth]} onPress={() => pickImage()}>
-                    <Text style={styles.buttonLabel}> 🖼️ Change</Text>
-                </Pressable>
-                <Pressable onPress={() => uploadProfile()} style={{ ...styles.button, ...styles.halfWidth, backgroundColor: theme.colors.primary }} >
-                    <Text style={{ ...styles.buttonLabel, color: theme.colors.text }}>Next ➜</Text>
-                </Pressable>
-            </View> :
-                <Pressable style={[styles.button, { alignSelf: 'center', backgroundColor: theme.colors.primary }]} onPress={() => pickImage()}>
-                    <Text style={{ ...styles.buttonLabel, color: theme.colors.text }}> 📸 Upload a photo</Text>
-                </Pressable>}
+            <View style={styles.contentContainer}>
+                <View style={styles.imageContainer}>
+                    <View style={styles.imageWrapper}>
+                        {selectedImage ? (
+                            <Image source={{ uri: selectedImage }} style={styles.image} />
+                        ) : (
+                            <ImageViewer
+                                imgSource={PlaceholderImage}
+                                selectedImage={selectedImage}
+                                style={styles.image}
+                            />
+                        )}
+                        {uploading && (
+                            <View style={styles.uploadingOverlay}>
+                                <ActivityIndicator color={theme.colors.primary} size={30} />
+                                <Text style={styles.uploadingText}>Uploading...</Text>
+                            </View>
+                        )}
+                        <TouchableOpacity
+                            style={styles.editButtonContainer}
+                            onPress={pickImage}
+                            disabled={uploading}
+                        >
+                            <Icon source={selected ? "pencil" : "plus"} size={24} color="#FFFFFF" />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
+
+            <View style={styles.footerContainer}>
+                {selected ? (
+                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: wp(2) }}>
+                        <TouchableOpacity style={[styles.button, styles.outlineButton]} onPress={pickImage} disabled={uploading} >
+                            <View style={styles.buttonContent}>
+                                <Icon source="image-multiple" size={20} color={theme.colors.primary} style={styles.buttonIcon} />
+                                <Text style={styles.buttonLabel}>Change Photo</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.button, styles.buttonFill]} onPress={uploadProfile} disabled={uploading} >
+                            <Text style={[styles.buttonLabel, styles.whiteText]}>{uploading ? 'Uploading...' : 'Continue'}</Text>
+                        </TouchableOpacity>
+                    </View>
+                ) : (
+                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: wp(2) }}>
+                        <TouchableOpacity style={[styles.button, styles.outlineButton]} onPress={takePhoto}
+                        >
+                            <View style={styles.buttonContent}>
+                                <Icon source="camera" size={20} color={theme.colors.primary} style={styles.buttonIcon} />
+                                <Text style={styles.buttonLabel}>Take Photo</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.button, styles.buttonFill]} onPress={pickImage} >
+                            <Icon source="image" size={20} color="#FFFFFF" style={styles.buttonIcon} />
+                            <Text style={[styles.buttonLabel, styles.whiteText]}>Choose Photo</Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
+            </View>
+            <View style={styles.tipContainer}>
+                <Icon source="lightbulb-outline" size={24} color={theme.colors.primary} style={styles.tipIcon} />
+                <Text style={styles.tipText}>
+                    For best results, use a well-lit photo where your face is clearly visible. Avoid group photos or heavily filtered images.
+                </Text>
+            </View>
         </SafeAreaView>
     )
 }
 
-export default profile_image
+export default profile_image;

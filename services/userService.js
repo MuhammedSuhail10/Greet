@@ -1,9 +1,6 @@
 import axios from 'axios';
 import ApiList from './ApiList';
 
-// API Fetching Functions On User
-export const getUserData = async (userId) => {}
-
 // Send OTP Function
 export const sendOtp = async (data) => {
     try {
@@ -11,10 +8,12 @@ export const sendOtp = async (data) => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            timeout: 10000,
         });
         return response.status;
     } catch (error) {
-        return null;
+        if (error.code === 'ECONNREFUSED' || error.code === 'ECONNABORTED') return 511;
+        if (error.code === 'ETIMEDOUT' || !error.response) return 501;
     }
 }
 
@@ -25,9 +24,12 @@ export const verifyOtp = async (data) => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            timeout: 10000,
         });
-        return response.status;
+        return { status: response.status, data: response.data };
     } catch (error) {
-        return null;
+        if (error.code === 'ECONNREFUSED' || error.code === 'ECONNABORTED') { return { status: 511, message: error.response.data }; }
+        if (error.code === 'ETIMEDOUT' || !error.response) { return { status: 501, message: error.response.data }; }
+        return { status: error.response.status, data: error.response.data };
     }
 }

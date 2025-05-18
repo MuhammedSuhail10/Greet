@@ -17,11 +17,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from '../../assets/icons';
 import { sendOtp } from '../../services/userService';
 import SnackBar from '../../components/SnackBar';
-import { useDispatch } from 'react-redux';
-import { addPhone } from '../../stores/phoneSlice';
 
 const login = ({ navigation }) => {
-  const dispatch = useDispatch();
   const dark = isDarkMode();
   const theme = useTheme();
   const [phone, setPhone] = useState('');
@@ -126,11 +123,14 @@ const login = ({ navigation }) => {
     if (status != 200) {
       setSnackVisible(true);
       setSnackKey(Date.now());
+      if (status == 511) setError('Check your internet connection and try again.');
+      else if (status == 501) setError('Request timed out. Please try again.');
+      else setError('Something went wrong. Please try again.');
+      // return;
     }
-    dispatch(addPhone(phone));
     router.push({
       pathname: "/auth/otp",
-      query: { phone: phone }
+      params: { phone: phone }
     });
   };
 
@@ -164,7 +164,7 @@ const login = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-      {snackVisible && <SnackBar key={snackKey} text="Something went wrong, please try again." />}
+      {snackVisible && <SnackBar key={snackKey} text={error} />}
     </SafeAreaView >
   );
 };

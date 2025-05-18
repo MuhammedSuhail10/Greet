@@ -16,16 +16,15 @@ const Header = ({ height, title }) => {
         },
         text: {
             color: theme.colors.text,
-            fontFamily: 'Outfit',
-            fontWeight: 'bold',
+            fontFamily: 'Poppins',
             fontSize: 30,
-            marginTop: 10
+            fontWeight: '700',
         },
     })
     return (
         <View style={{ height: { height }, ...styles.bg }}>
             <View style={{ width: wp(100), flexDirection: 'column', justifyContent: 'center' }}>
-                <Text style={{ ...styles.text, }}>Wishlist</Text>
+                <Text style={{ ...styles.text, }}>Follows</Text>
             </View>
         </View>
     )

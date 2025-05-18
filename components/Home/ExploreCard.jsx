@@ -60,12 +60,13 @@ const ExploreCard = ({ item }) => {
         nameText: {
             fontFamily: 'Poppins',
             fontSize: 21,
-            color: '#FFFFFF',
+            color: theme.colors.text,
         },
         ageText: {
             fontSize: 21,
             fontWeight: '400',
-            color: '#F0F0F0',
+            color: theme.colors.text ,
+            fontFamily: 'Poppins',
         },
     })
     const navigation = useNavigation();

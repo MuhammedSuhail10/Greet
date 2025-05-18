@@ -18,22 +18,15 @@ const Header = ({ height, title }) => {
         },
         text: {
             color: theme.colors.text,
-            fontFamily: 'Jomhuria',
-            fontSize: 35
+            fontFamily: 'Poppins',
+            fontSize: 25,
+            fontWeight: '700',
         },
-        secondaryText: {
-            color: theme.colors.text,
-            fontFamily: 'Popins',
-            fontSize: 15,
-            marginTop: -12,
-            paddingInline: 65
-        }
     })
     return (
         <View style={{ height: { height }, ...styles.bg }}>
             <View style={{ width: wp(75), flexDirection: 'column', justifyContent: 'center' }}>
-                <Text style={{ ...styles.text, }}>MEET & GREET</Text>
-                <Text style={{ ...styles.secondaryText, }}>{title}</Text>
+                <Text style={{ ...styles.text, }}>{title}</Text>
             </View>
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', width: wp(15), alignItems: 'center' }}>
                 <TouchableOpacity onPress={() => navigation.navigate('notification')}>

@@ -1,4 +1,6 @@
-import { View, Text, FlatList, Pressable } from 'react-native'
+import { View, Text, FlatList, Pressable, Platform, Alert, Linking } from 'react-native'
+import * as IntentLauncher from 'expo-intent-launcher';
+import * as Application from 'expo-application';
 import React, { useEffect, useState } from 'react'
 import Header from './Header'
 import NearbyCard from './NearbyCard'
@@ -27,17 +29,16 @@ const Nearby = () => {
             borderRadius: 10,
             padding: hp(2),
             width: wp(50),
-            // alignSelf: 'center',
             backgroundColor: theme.colors.primary,
-            borderWidth: 1,
             marginTop: hp(2),
         },
         buttonLabel: {
-            color: theme.colors.text,
+            color: "#fff",
             fontSize: 16,
             fontFamily: 'Poppins',
             textAlign: 'center',
         },
+        errorMsg: { color: theme.colors.text, textAlign: 'center', fontSize: 20, fontFamily: 'Outfit' }
     })
     const data2 = [
         {
@@ -60,6 +61,16 @@ const Nearby = () => {
             name: "Suhail",
             age: 40,
         },
+        {
+            id: '58694a0f-3da1-471f-bdd96-145571e29d72',
+            name: "Suhail",
+            age: 30,
+        },
+        {
+            id: '58694a0f-3da1-471f-bfd96-145571e29d78',
+            name: "Suhail",
+            age: 40,
+        },
     ]
 
     useEffect(() => {
@@ -78,6 +89,31 @@ const Nearby = () => {
         if (status !== 'granted') {
             setErrorMsg('Permission to access location was denied. Change the permission in settings.')
             setLoading(false);
+            if (Platform.OS === 'ios') {
+                Alert.alert(
+                    "Location Permission Required",
+                    "Please enable location permissions in your device settings to use this feature.",
+                    [
+                        { text: "Cancel", style: "cancel" },
+                        { text: "Open Settings", onPress: () => Linking.openSettings() }
+                    ]
+                );
+            }
+            else if (Platform.OS === 'android') {
+                Alert.alert(
+                    "Location Permission Required",
+                    "Please enable location permissions in your app settings to use this feature.",
+                    [
+                        { text: "Cancel", style: "cancel" },
+                        {
+                            text: "Open Settings", onPress: () => IntentLauncher.startActivityAsync(
+                                IntentLauncher.ActivityAction.APPLICATION_DETAILS_SETTINGS,
+                                { data: 'package:' + Application.applicationId }
+                            )
+                        }
+                    ]
+                );
+            }
             return;
         }
         let current_loc = await Location.getCurrentPositionAsync({});
@@ -91,21 +127,18 @@ const Nearby = () => {
             return;
         }
         setLoading(true);
-
-        // api working
-
         setLoading(false);
     }
     return (
         <>
-            {loading ? <Loader /> : <>{location ? < FlatList
+            {loading ? <Loader /> : <>{location ? <FlatList
                 ListHeaderComponent={<Header font='Jomhuria' title="Nearby" height={hp(10)} />}
                 data={data2}
                 renderItem={({ item }) => <NearbyCard item={item} />}
                 keyExtractor={(item) => item.id.toString()}
                 contentContainerStyle={styles.cardBg}
                 ListFooterComponent={
-                    <View style={{ alignItems: 'center', display: 'flex', justifyContent: 'center', width: wp(100) }}>
+                    <View style={{ alignItems: 'center', display: 'flex', justifyContent: 'center', width: wp(100), marginBottom: 10 }}>
                         <Pressable onPress={() => getData()} style={[styles.button,]}>
                             <Text style={styles.buttonLabel}>Shuffle suggestions</Text>
                         </Pressable>
@@ -113,17 +146,15 @@ const Nearby = () => {
                 }
                 ListEmptyComponent={<Text style={{ textAlign: 'center', marginTop: 20 }}>No nearby people found</Text>}
             /> : (
-                <View style={{ alignItems: 'center', justifyContent: 'center', padding: 20, height: hp(100) }}>
-                    <Text style={{ color: theme.colors.text, textAlign: 'center', fontWeight: 'bold', fontSize: 16, fontFamily: 'Poppins' }}>
-                        {errorMsg}
-                    </Text>
-                    <Pressable
-                        onPress={() => getData()}
-                        style={[styles.button, { marginTop: 15 }]}
-                    >
-                        <Text style={styles.buttonLabel}>Try Again</Text>
-                    </Pressable>
-                </View>
+                <>
+                    <Header font='Jomhuria' title="Nearby" height={hp(10)} />
+                    <View style={{ alignItems: 'center', justifyContent: 'center', height: hp(80), paddingInline: 20 }}>
+                        <Text style={styles.errorMsg}>{errorMsg}</Text>
+                        <Pressable onPress={() => getData()} style={[styles.button, { marginTop: 15 }]}  >
+                            <Text style={styles.buttonLabel}>Try Again</Text>
+                        </Pressable>
+                    </View>
+                </>
             )} </>}
         </>
     )

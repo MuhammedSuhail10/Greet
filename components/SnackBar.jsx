@@ -31,9 +31,10 @@ const SnackBar = ({ text }) => {
             shadowRadius: 4,
         },
         text: {
-            color: theme.colors.inverted,
+            color: '#fff',
             fontSize: 16,
             textAlign: 'center',
+            fontFamily: 'Poppins'
         },
     });
 

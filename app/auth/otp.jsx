@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Children } from 'react';
 import {
     View,
     Text,
@@ -14,9 +14,8 @@ import Icon from '../../assets/icons';
 import { hp, isDarkMode, wp } from '../../helpers/common';
 import { useTheme } from '../../constants/theme';
 import { router, useLocalSearchParams } from 'expo-router';
-import { createTwoButtonAlert } from '../../helpers/alert';
-import { useSelector } from 'react-redux';
-// import { CheckCircle } from 'lucide-react-native';
+import { sendOtp, verifyOtp } from '../../services/userService';
+import SnackBar from '../../components/SnackBar';
 
 const otp = () => {
     const dark = isDarkMode();
@@ -24,8 +23,10 @@ const otp = () => {
     const [otp, setOtp] = useState(['', '', '', '']);
     const [timer, setTimer] = useState(30);
     const inputRefs = useRef([]);
-    const phone = useSelector(phoneDetails);
-    console.log(phone);
+    const { phone } = useLocalSearchParams();
+    const [snackVisible, setSnackVisible] = useState(false);
+    const [snackKey, setSnackKey] = useState(0);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         const countdown = timer > 0 && setInterval(() => setTimer(timer - 1), 1000);
@@ -59,6 +60,7 @@ const otp = () => {
             color: theme.colors.LessOpacity,
             marginBottom: 32,
             textAlign: 'center',
+            fontFamily: 'Poppins',
         },
         otpContainer: {
             flexDirection: 'row',
@@ -84,11 +86,10 @@ const otp = () => {
         button: {
             backgroundColor: theme.colors.primary,
             borderRadius: 12,
-            paddingVertical: 16,
-            paddingHorizontal: 24,
-            width: wp(75),
+            paddingVertical: 15,
+            width: wp(72),
             maxWidth: 400,
-            marginBottom: 24,
+            marginBottom: 15,
         },
         buttonDisabled: {
             backgroundColor: theme.colors.secondaryBg,
@@ -105,27 +106,26 @@ const otp = () => {
         },
         resendText: {
             color: theme.colors.LessOpacity,
-            fontSize: 14,
+            fontSize: 14.5,
+            fontFamily: 'Poppins',
         },
         timerText: {
             color: theme.colors.LessOpacity,
-            fontSize: 14,
+            fontSize: 14.5,
             fontWeight: '500',
+            fontFamily: 'Poppins',
         },
         resendButton: {
             color: theme.colors.text,
-            fontSize: 14,
+            fontSize: 14.5,
             fontWeight: '500',
+            fontFamily: 'Poppins',
         },
     });
 
     const handleOtpChange = (value, index) => {
         if (value.length <= 1) {
-            if (isNaN(value)) {
-                const alert = createTwoButtonAlert("OTP Error", "Only digits expected", "OK")
-                console.log("alert is", alert)
-                return
-            }
+            if (isNaN(value)) return;
             const newOtp = [...otp];
             newOtp[index] = value;
             setOtp(newOtp);
@@ -133,26 +133,39 @@ const otp = () => {
         }
     };
     const isOtpComplete = otp.every(digit => digit !== '');
-    const handleResendOtp = () => {
+    const handleResendOtp = async () => {
+        const status = await sendOtp({ phone });
+        console.log("status: ", status)
+        if (status != 200) {
+            setSnackVisible(true);
+            setSnackKey(Date.now());
+            if (status == 511) setError('Check your internet connection and try again.');
+            else if (status == 501) setError('Request timed out. Please try again.');
+            else setError('Something went wrong. Please try again.');
+            // return;
+        }
+        setError("Otp generated succesfully.")
         setTimer(30);
-    };
+    }
 
     const handleKeyPress = (e, index) => {
-        if (e.nativeEvent.key === 'Backspace' && index > 0 && otp[index] === '') {
-            inputRefs.current[index - 1].focus();
-        }
+        if (e.nativeEvent.key === 'Backspace' && index > 0 && otp[index] === '') inputRefs.current[index - 1].focus();
     };
- 
-    const verifyOTP = async () => {
-        if (!otp.length === 4) { return; }
-        console.log("Phone: ", phone)
+
+    const otpVerify = async () => {
+        if (otp.length !== 4) return;
         const otpString = otp.join('');
-        otp.forEach(element => {
-            otpString += element;
-        });
-        const status = await verifyOTP({ phone: phone, otp: otpString });
-        console.log("status: ", status) 
         router.replace("/details/personal");
+        const { status, data } = await verifyOtp({ phone: phone, otp: otpString });
+        console.log(status, data);
+        if (![200, 201, 206].includes(status)) {
+            setSnackVisible(true);
+            setSnackKey(Date.now());
+            if (status == 511) setError('Check your internet connection and try again.');
+            else if (status == 501) setError('Request timed out. Please try again.');
+            else setError(data?.message || "Something went wrong.");
+            // return;
+        }
     }
 
     return (
@@ -163,7 +176,7 @@ const otp = () => {
                 style={styles.keyboardAvoid}
             >
                 <View style={styles.content}>
-                    <View style={styles.iconContainer}><Icon name="phone" size="80" strokeWidth="1" /> </View>
+                    <View style={styles.iconContainer}><Icon name="phone" size="80" strokeWidth="1" /></View>
                     <Text style={styles.title}>Otp verification</Text>
                     <Text style={styles.subtitle}>We've sent a verification code to {phone}</Text>
                     <View style={styles.otpContainer}>
@@ -181,7 +194,7 @@ const otp = () => {
                             />
                         ))}
                     </View>
-                    <TouchableOpacity onPress={verifyOTP} style={[styles.button, !isOtpComplete && styles.buttonDisabled]}
+                    <TouchableOpacity onPress={() => otpVerify()} style={[styles.button, !isOtpComplete && styles.buttonDisabled]}
                         disabled={!isOtpComplete} >
                         <Text style={styles.buttonText}>Verify</Text>
                     </TouchableOpacity>
@@ -197,6 +210,7 @@ const otp = () => {
                     </View>
                 </View>
             </KeyboardAvoidingView>
+            {snackVisible && <SnackBar key={snackKey} text={error} />}
         </SafeAreaView>
     );
 };
