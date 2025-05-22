@@ -154,7 +154,7 @@ const Nearby = () => {
                     <Header font='Jomhuria' title="Nearby" height={hp(10)} />
                     <View style={{ alignItems: 'center', justifyContent: 'center', height: hp(80), paddingInline: 20 }}>
                         <Text style={styles.errorMsg}>{errorMsg}</Text>
-                        <Pressable onPress={() => locationError ? IntentLauncher.startActivityAsync(IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS) : getData()} style={[styles.button, { marginTop: 15 }]} >
+                        <Pressable onPress={() => locationError ? ( Platform.OS === 'android' ? IntentLauncher.startActivityAsync(IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS) : Linking.openURL('app-settings:')): getData()} style={[styles.button, { marginTop: 15 }]} >
                           <Text style={styles.buttonLabel}>
                             {locationError ? 'Open Location Settings' : 'Try Again'}
                           </Text>
