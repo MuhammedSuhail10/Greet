@@ -15,7 +15,7 @@ import { hp, isDarkMode, wp } from '../../helpers/common';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from '../../assets/icons';
-import { sendOtp } from '../../services/userService';
+import { sendOtp } from '../../services/authService';
 import SnackBar from '../../components/SnackBar';
 
 const login = ({ navigation }) => {

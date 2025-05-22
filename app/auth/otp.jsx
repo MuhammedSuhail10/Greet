@@ -14,8 +14,9 @@ import Icon from '../../assets/icons';
 import { hp, isDarkMode, wp } from '../../helpers/common';
 import { useTheme } from '../../constants/theme';
 import { router, useLocalSearchParams } from 'expo-router';
-import { sendOtp, verifyOtp } from '../../services/userService';
+import { sendOtp, verifyOtp } from '../../services/authService';
 import SnackBar from '../../components/SnackBar';
+import TokenService from '../../helpers/token';
 
 const otp = () => {
     const dark = isDarkMode();
@@ -155,7 +156,6 @@ const otp = () => {
     const otpVerify = async () => {
         if (otp.length !== 4) return;
         const otpString = otp.join('');
-        router.replace("/details/personal");
         const { status, data } = await verifyOtp({ phone: phone, otp: otpString });
         console.log(status, data);
         if (![200, 201, 206].includes(status)) {
@@ -164,8 +164,13 @@ const otp = () => {
             if (status == 511) setError('Check your internet connection and try again.');
             else if (status == 501) setError('Request timed out. Please try again.');
             else setError(data?.message || "Something went wrong.");
-            // return;
+            return;
         }
+        if (data?.token) TokenService.saveTokens(data.token, data.refreshToken);
+        if (status == 204) router.replace("/details/personal");
+        if (status == 200) router.replace("/home");
+        if (status == 201) router.replace("/home");
+        if (status == 206) router.replace("/home");
     }
 
     return (

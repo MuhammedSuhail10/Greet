@@ -1,5 +1,5 @@
 import axios from 'axios';
-import ApiList from './ApiList';
+import ApiList from '../helpers/api';
 
 // Send OTP Function
 export const sendOtp = async (data) => {

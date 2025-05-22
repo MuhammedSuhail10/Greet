@@ -16,10 +16,10 @@ const Index = () => {
       flex: 1,
     },
   });
-  
+
   const dark = isDarkMode();
   const router = useRouter();
-  
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       // router.replace('/home');
@@ -29,12 +29,12 @@ const Index = () => {
   }, [router]);
 
   return (
-      <PaperProvider>
-        <SafeAreaView style={styles.bg}>
-          <StatusBar style={dark ? 'light' : 'dark'} />
-          <Loader />
-        </SafeAreaView>
-      </PaperProvider>
+    <PaperProvider>
+      <SafeAreaView style={styles.bg}>
+        <StatusBar style={dark ? 'light' : 'dark'} />
+        <Loader />
+      </SafeAreaView>
+    </PaperProvider>
   );
 };
 

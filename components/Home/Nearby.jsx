@@ -130,6 +130,25 @@ const Nearby = () => {
         setLoading(true);
         setLoading(false);
     }
+
+    const openLocationSettings = async () => {
+        if (locationError) {
+            if (Platform.OS === 'android') {
+                await IntentLauncher.startActivityAsync('android.settings.LOCATION_SOURCE_SETTINGS');
+            } else {
+                const supported = await Linking.canOpenURL('app-settings:');
+                if (supported) {
+                    Linking.openURL('app-settings:');
+                } else {
+                    Alert.alert(
+                        'Settings',
+                        'Please go to Settings > Privacy & Security > Location Services to enable location access.',
+                        [{ text: 'OK' }]
+                    );
+                }
+            }
+        } getData();
+    };
     return (
         <>
             {loading ? <Loader /> : (
@@ -159,9 +178,9 @@ const Nearby = () => {
                             <Header font='Jomhuria' title="Nearby" height={hp(10)} />
                             <View style={{ alignItems: 'center', justifyContent: 'center', height: hp(80), paddingInline: 20 }}>
                                 <Text style={styles.errorMsg}>{errorMsg}</Text>
-                                <Pressable onPress={() => locationError ? (Platform.OS === 'android' ? IntentLauncher.startActivityAsync(IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS) : Linking.openURL('app-settings:')) : getData()} style={[styles.button, { marginTop: 15 }]} >
+                                <Pressable onPress={openLocationSettings} style={[styles.button, { marginTop: 15 }]} >
                                     <Text style={styles.buttonLabel}>
-                                        {locationError ? 'Open Location Settings' : 'Try Again'}
+                                        {locationError ? 'Open Location' : 'Try Again'}
                                     </Text>
                                 </Pressable>
                             </View>
