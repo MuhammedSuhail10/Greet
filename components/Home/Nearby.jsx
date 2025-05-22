@@ -81,7 +81,7 @@ const Nearby = () => {
         setLoading(true);
         const locationServicesEnabled = await Location.hasServicesEnabledAsync();
         if (!locationServicesEnabled) {
-            setErrorMsg('Location services are disabled. Please enable them in your device settings.');
+            setErrorMsg('Location services are disabled. Please enable them in your device settings and try again.');
             setLoading(false);
             return;
         }
@@ -131,31 +131,41 @@ const Nearby = () => {
     }
     return (
         <>
-            {loading ? <Loader /> : <>{location ? <FlatList
-                ListHeaderComponent={<Header font='Jomhuria' title="Nearby" height={hp(10)} />}
-                data={data2}
-                renderItem={({ item }) => <NearbyCard item={item} />}
-                keyExtractor={(item) => item.id.toString()}
-                contentContainerStyle={styles.cardBg}
-                ListFooterComponent={
-                    <View style={{ alignItems: 'center', display: 'flex', justifyContent: 'center', width: wp(100), marginBottom: 10 }}>
-                        <Pressable onPress={() => getData()} style={[styles.button,]}>
-                            <Text style={styles.buttonLabel}>Shuffle suggestions</Text>
-                        </Pressable>
-                    </View>
-                }
-                ListEmptyComponent={<Text style={{ textAlign: 'center', marginTop: 20 }}>No nearby people found</Text>}
-            /> : (
+            {loading ? <Loader /> : (
                 <>
-                    <Header font='Jomhuria' title="Nearby" height={hp(10)} />
-                    <View style={{ alignItems: 'center', justifyContent: 'center', height: hp(80), paddingInline: 20 }}>
-                        <Text style={styles.errorMsg}>{errorMsg}</Text>
-                        <Pressable onPress={() => getData()} style={[styles.button, { marginTop: 15 }]}  >
-                            <Text style={styles.buttonLabel}>Try Again</Text>
-                        </Pressable>
-                    </View>
+                    {location ? (
+                        <FlatList
+                            ListHeaderComponent={<Header font='Jomhuria' title="Nearby" height={hp(10)} />}
+                            data={data2}
+                            renderItem={({ item }) => <NearbyCard item={item} />}
+                            keyExtractor={(item) => item.id.toString()}
+                            contentContainerStyle={styles.cardBg}
+                            ListFooterComponent={
+                                <View style={{ alignItems: 'center', display: 'flex', justifyContent: 'center', width: wp(100), marginBottom: 10 }}>
+                                    <Pressable onPress={() => getData()} style={styles.button}>
+                                        <Text style={styles.buttonLabel}>Shuffle suggestions</Text>
+                                    </Pressable>
+                                </View>
+                            }
+                            ListEmptyComponent={
+                                <View>
+                                    <Text style={{ textAlign: 'center', marginTop: 20 }}>No nearby people found</Text>
+                                </View>
+                            }
+                        />
+                    ) : (
+                        <>
+                            <Header font='Jomhuria' title="Nearby" height={hp(10)} />
+                            <View style={{ alignItems: 'center', justifyContent: 'center', height: hp(80), paddingHorizontal: 20 }}>
+                                <Text style={styles.errorMsg}>{errorMsg}</Text>
+                                <Pressable onPress={() => getData()} style={[styles.button, { marginTop: 20 }]}>
+                                    <Text style={styles.buttonLabel}>Try Again</Text>
+                                </Pressable>
+                            </View>
+                        </>
+                    )}
                 </>
-            )} </>}
+            )}
         </>
     )
 }

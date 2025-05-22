@@ -5,7 +5,7 @@ export const useTheme = () => {
     return {
         colors: {
             primaryBg: isDarkMode() ? '#000' : '#fff',
-            secondaryBg: isDarkMode() ? '#232323' : '#f0f8ff',
+            secondaryBg: isDarkMode() ? '#232323' : '#ced4da',
             inverted: isDarkMode() ? '#000' : '#fff',
             primary: '#E63946',
             text: isDarkMode() ? '#f0f8ff' : '#000',

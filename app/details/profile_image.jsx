@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTheme } from '../../constants/theme'
 import { hp, isDarkMode, wp } from '../../helpers/common'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -7,7 +7,7 @@ import { StatusBar } from 'expo-status-bar'
 import ImageViewer from '../../components/ImageViewer'
 import { useFonts } from 'expo-font'
 import * as ImagePicker from 'expo-image-picker'
-import { router } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { Icon, ProgressBar, ActivityIndicator } from 'react-native-paper'
 import { LinearGradient } from 'expo-linear-gradient'
 
@@ -18,13 +18,12 @@ const profile_image = () => {
         'Outfit': require('../../assets/fonts/Outfit.ttf'),
         'Poppins': require('../../assets/fonts/Poppins.ttf'),
     })
-
+    const { data } = useLocalSearchParams();
     const [selected, setSelected] = useState(false)
     const [selectedImage, setSelectedImage] = useState(undefined)
     const [uploading, setUploading] = useState(false)
 
     const PlaceholderImage = 'https://imgs.search.brave.com/awksT_Zoh8G9Qn5d-CbZP4gAPcl0EDxLP0J88fgAnB4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNTg3/ODA1MTU2L3ZlY3Rv/ci9wcm9maWxlLXBp/Y3R1cmUtdmVjdG9y/LWlsbHVzdHJhdGlv/bi5qcGc_cz02MTJ4/NjEyJnc9MCZrPTIw/JmM9Z2t2TERDZ3NI/SC04SGVRZTdKc2po/bE9ZNnZSQkprX3NL/VzlseWFMZ21Mbz0'
-
     const styles = StyleSheet.create({
         container: {
             flex: 1,
@@ -79,7 +78,6 @@ const profile_image = () => {
             width: hp(35),
             height: hp(35),
             borderRadius: hp(17.5),
-            overflow: 'hidden',
             backgroundColor: theme.colors.secondaryBg,
             alignItems: 'center',
             justifyContent: 'center',
@@ -97,8 +95,8 @@ const profile_image = () => {
         },
         editButtonContainer: {
             position: 'absolute',
-            bottom: 0,
-            right: 0,
+            bottom: 10,
+            right: 10,
             backgroundColor: theme.colors.primary,
             width: hp(7),
             height: hp(7),
@@ -228,6 +226,10 @@ const profile_image = () => {
         setUploading(true)
         setTimeout(() => {
             setUploading(false)
+
+            // API call to upload the image
+            console.log(data, selectedImage)
+
             router.push('/details/success')
         }, 1500)
     }
@@ -237,7 +239,7 @@ const profile_image = () => {
             <StatusBar style={dark ? 'light' : 'dark'} />
             <View style={styles.headerContainer}>
                 <View style={styles.progressContainer}>
-                    <Text style={styles.progressText}>Step 2 of 2</Text>
+                    <Text style={styles.progressText}>Step 3 of 3</Text>
                     <ProgressBar progress={1} color={theme.colors.primary} style={styles.progressBar} />
                 </View>
                 <Text style={styles.title}>Profile Image</Text>
@@ -247,7 +249,16 @@ const profile_image = () => {
                 <View style={styles.imageContainer}>
                     <View style={styles.imageWrapper}>
                         {selectedImage ? (
-                            <Image source={{ uri: selectedImage }} style={styles.image} />
+                            <>
+                                <Image source={{ uri: selectedImage }} style={styles.image} />
+                                <TouchableOpacity
+                                    style={styles.editButtonContainer}
+                                    onPress={pickImage}
+                                    disabled={uploading}
+                                >
+                                    <Icon source={selected ? "pencil" : "plus"} size={24} color="#FFFFFF" />
+                                </TouchableOpacity>
+                            </>
                         ) : (
                             <ImageViewer
                                 imgSource={PlaceholderImage}
@@ -261,30 +272,15 @@ const profile_image = () => {
                                 <Text style={styles.uploadingText}>Uploading...</Text>
                             </View>
                         )}
-                        <TouchableOpacity
-                            style={styles.editButtonContainer}
-                            onPress={pickImage}
-                            disabled={uploading}
-                        >
-                            <Icon source={selected ? "pencil" : "plus"} size={24} color="#FFFFFF" />
-                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
 
             <View style={styles.footerContainer}>
                 {selected ? (
-                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: wp(2) }}>
-                        <TouchableOpacity style={[styles.button, styles.outlineButton]} onPress={pickImage} disabled={uploading} >
-                            <View style={styles.buttonContent}>
-                                <Icon source="image-multiple" size={20} color={theme.colors.primary} style={styles.buttonIcon} />
-                                <Text style={styles.buttonLabel}>Change Photo</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.button, styles.buttonFill]} onPress={uploadProfile} disabled={uploading} >
-                            <Text style={[styles.buttonLabel, styles.whiteText]}>{uploading ? 'Uploading...' : 'Continue'}</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity style={[styles.button, styles.buttonFill, {width: 'auto', height: hp(7)}]} onPress={uploadProfile} disabled={uploading} >
+                        <Text style={[styles.buttonLabel, styles.whiteText]}>{uploading ? 'Uploading...' : 'Continue'}</Text>
+                    </TouchableOpacity>
                 ) : (
                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: wp(2) }}>
                         <TouchableOpacity style={[styles.button, styles.outlineButton]} onPress={takePhoto}

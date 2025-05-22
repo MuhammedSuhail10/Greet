@@ -6,7 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import { useFonts } from 'expo-font';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Button } from 'react-native-paper';
 
@@ -116,6 +116,23 @@ const landing_1 = () => {
             fontWeight: '600',
             color: '#fff',
         },
+        buttonContainer: {
+            padding: wp(5),
+            paddingTop: 0,
+        },
+        button: {
+            borderRadius: 20,
+            padding: hp(2),
+            width: wp(50),
+            alignSelf: 'center',
+            backgroundColor: theme.colors.primary,
+        },
+        buttonLabel: {
+            color: "#fff",
+            fontSize: 16,
+            fontFamily: 'Poppins',
+            textAlign: 'center',
+        },
         secondaryButton: {
             borderWidth: 1.5,
             borderColor: dark ? 'rgba(255,255,255,0.5)' : theme.colors.textSecondary,
@@ -158,11 +175,9 @@ const landing_1 = () => {
                     </LinearGradient>
                 </View>
 
-                <View style={styles.buttonRow}>
-                    <TouchableOpacity style={styles.primaryButton}>
-                        <Link href="/auth/login" asChild>
-                            <Text style={styles.buttonText}>Get Started</Text>
-                        </Link>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity onPress={() => router.push("/auth/login")} style={[styles.button]}  >
+                        <Text style={styles.buttonLabel}>Get Started</Text>
                     </TouchableOpacity>
                 </View>
             </View>

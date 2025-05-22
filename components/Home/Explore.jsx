@@ -82,7 +82,7 @@ const Explore = () => {
                     tintColor="#2196F3"
                 />
             }
-            ListHeaderComponent={<Header font='Jomhuria' title="Explore" height={hp(10)} />}
+            ListHeaderComponent={<Header font='Jomhuria' title="Meet And Greet" height={hp(10)} />}
             data={data}
             renderItem={({ item }) => <ExploreCard item={item} />}
             keyExtractor={(item) => item.id.toString()}

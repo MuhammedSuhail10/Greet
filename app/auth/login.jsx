@@ -74,7 +74,7 @@ const login = ({ navigation }) => {
     },
     separator: {
       fontSize: 20,
-      color: '#D1D5DB',
+      color: theme.colors.text,
       marginHorizontal: 12,
     },
     input: {

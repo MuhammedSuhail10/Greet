@@ -142,7 +142,7 @@ const otp = () => {
             if (status == 511) setError('Check your internet connection and try again.');
             else if (status == 501) setError('Request timed out. Please try again.');
             else setError('Something went wrong. Please try again.');
-            // return;
+            return;
         }
         setError("Otp generated succesfully.")
         setTimer(30);

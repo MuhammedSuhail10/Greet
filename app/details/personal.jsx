@@ -5,10 +5,8 @@ import { useTheme } from '../../constants/theme'
 import { StatusBar } from 'expo-status-bar'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Icon, TextInput, ProgressBar } from 'react-native-paper'
-import SelectDropdown from 'react-native-select-dropdown'
 import { router } from 'expo-router'
 import { useFonts } from 'expo-font'
-import { LinearGradient } from 'expo-linear-gradient'
 
 const personal = () => {
     const [loaded, error] = useFonts({
@@ -21,12 +19,8 @@ const personal = () => {
     const [name, setName] = useState('')
     const [age, setAge] = useState('')
     const [height, setHeight] = useState('')
-    const [lookingFor, setLookingFor] = useState('')
     const [city, setCity] = useState('')
     const [state, setState] = useState('')
-    const [drinkingHabit, setDrinkingHabit] = useState('')
-    const [smokingHabit, setSmokingHabit] = useState('')
-    const [relationshipStatus, setRelationshipStatus] = useState('')
     const [bio, setBio] = useState('')
     const [errors, setErrors] = useState({})
 
@@ -77,14 +71,12 @@ const personal = () => {
             fontSize: hp(2),
             fontFamily: 'Outfit',
             fontWeight: '600',
-            marginTop: hp(1.5),
-            marginBottom: hp(1),
         },
         input: {
             backgroundColor: theme.colors.primaryBg,
-            fontSize: hp(1.8),
+            fontSize: hp(1.7),
             height: hp(7),
-            fontFamily: 'Poppins',
+            fontFamily: 'Outfit',
             borderColor: theme.colors.secondaryBg,
             marginBottom: hp(2),
             width: '100%',
@@ -148,252 +140,177 @@ const personal = () => {
             paddingTop: 0,
         },
         button: {
-            borderRadius: 12,
-            paddingVertical: hp(2),
-            width: '100%',
-            overflow: 'hidden',
+            borderRadius: 10,
+            padding: hp(2),
+            width: wp(50),
+            alignSelf: 'center',
+            backgroundColor: theme.colors.primary,
         },
-        buttonContent: {
-            height: hp(6),
-            borderRadius: theme.borderRadius.lg,
-            marginInline: 10,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        buttonText: {
-            color: '#FFFFFF',
-            fontSize: hp(2.5),
+        buttonLabel: {
+            color: "#fff",
+            fontSize: 16,
             fontFamily: 'Poppins',
             textAlign: 'center',
-            marginRight: wp(2),
         },
-        buttonIcon: {
-            color: '#FFFFFF',
-            fontSize: hp(2.5),
+        buttonDisabled: {
+            backgroundColor: theme.colors.secondaryBg,
         },
         errorText: {
             color: '#FF5252',
-            fontSize: hp(1.5),
+            fontSize: hp(1.7),
             fontFamily: 'Outfit',
             marginTop: -hp(1.5),
-            marginBottom: hp(1),
+            marginBottom: hp(0.5),
             marginLeft: wp(2),
         },
     })
 
-    const search = ['Long term relationship', 'One night stand', 'Casual dating', 'Friendship first', 'Dating & Marriage', 'Travel companion']
-    const relation = ['Single', 'In a relationship']
-    const consumption = ['Occasionally', 'Rarely', 'Monthly', 'Daily', 'Never']
-
     const validateForm = () => {
         const newErrors = {}
-        if (!name) newErrors.name = 'Name is required'
-        if (!age) newErrors.age = 'Age is required'
-        // if (!lookingFor) newErrors.lookingFor = 'Please select what you are looking for'
+        if (!name) newErrors.name = 'Name is required';
+        if (!age) newErrors.age = 'Age is required';
+        if (!height) newErrors.height = 'Height is required';
+        if (!city) newErrors.city = 'City is required';
+        if (!state) newErrors.state = 'State is required';
+        if (!bio) newErrors.bio = 'Bio is required';
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0
     }
 
     const personalDetails = async () => {
         if (validateForm()) {
-            router.push("/details/profile_image")
+            router.push({
+                pathname: "/details/personal2",
+                params: {"name": name, "age": age, "height": height, "city": city, "state": state, "bio": bio }
+            })
         }
     }
-
-    const renderDropdown = (data, placeholder, value, setter, halfWidth = false, errorKey = null) => (
-        <View style={[styles.dropdownContainer, halfWidth && styles.halfWidth]}>
-            <SelectDropdown
-                data={data}
-                defaultValue={value}
-                onSelect={(selectedItem) => {
-                    setter(selectedItem)
-                    if (errorKey) {
-                        setErrors({ ...errors, [errorKey]: null })
-                    }
-                }}
-                renderButton={(selectedItem, isOpened) => (
-                    <View style={[
-                        styles.dropdownButton,
-                        isOpened && { borderColor: theme.colors.primary },
-                        errorKey && errors[errorKey] && { borderColor: '#FF5252' }
-                    ]}>
-                        <Text style={[
-                            styles.dropdownButtonText,
-                            selectedItem && { opacity: 1 },
-                            errorKey && errors[errorKey] && { color: '#FF5252' }
-                        ]}>
-                            {selectedItem || placeholder}
-                        </Text>
-                        <Icon
-                            source={isOpened ? 'chevron-up' : 'chevron-down'}
-                            color={theme.colors.text}
-                            size={24}
-                        />
-                    </View>
-                )}
-                renderItem={(item, index, isSelected) => (
-                    <View style={[styles.dropdownItem, isSelected && styles.selectedDropdownItem]}>
-                        <Text style={[styles.dropdownItemText, isSelected && styles.selectedDropdownItemText]}>
-                            {item}
-                        </Text>
-                    </View>
-                )}
-                showsVerticalScrollIndicator={false}
-                dropdownStyle={styles.dropdownMenu}
-            />
-            {errorKey && errors[errorKey] && (
-                <Text style={styles.errorText}>{errors[errorKey]}</Text>
-            )}
-        </View>
-    )
 
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar style={dark ? 'light' : 'dark'} />
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={styles.container}
-            >
-                <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-                    <View style={styles.headerContainer}>
-                        <View style={styles.progressContainer}>
-                            <Text style={styles.progressText}>Step 1 of 2</Text>
-                            <ProgressBar progress={0.5} color={theme.colors.primary} style={styles.progressBar} />
-                        </View>
-                        <Text style={styles.title}>Personal Details</Text>
-                        <Text style={styles.subtitle}>Tell us a bit about yourself to help us find your perfect match</Text>
+            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container} >
+                <View style={styles.headerContainer}>
+                    <View style={styles.progressContainer}>
+                        <Text style={styles.progressText}>Step 1 of 3</Text>
+                        <ProgressBar progress={0.3} color={theme.colors.primary} style={styles.progressBar} />
                     </View>
+                    <Text style={styles.title}>Personal Details</Text>
+                    <Text style={styles.subtitle}>Tell us a bit about yourself to help us find your perfect match</Text>
+                </View>
+                <View style={styles.inputContainer}>
+                    <Text style={styles.sectionTitle}>Basic Information</Text>
 
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.sectionTitle}>Basic Information</Text>
+                    {/* Name */}
+                    <TextInput
+                        mode="outlined"
+                        label="Full Name"
+                        value={name}
+                        onChangeText={(text) => {
+                            setName(text)
+                            if (errors.name) setErrors({ ...errors, name: null })
+                        }}
+                        style={styles.input}
+                        activeOutlineColor={theme.colors.primary}
+                        outlineColor={errors.name ? '#FF5252' : theme.colors.LessOpacity}
+                        theme={{ roundness: 12 }}
+                        textColor={theme.colors.text}
+                        left={<TextInput.Icon icon="account" color={theme.colors.text} />}
+                        error={!!errors.name}
+                    />
 
+                    {/* Age and Height */}
+                    <View style={styles.row}>
                         <TextInput
                             mode="outlined"
-                            label="Full Name"
-                            value={name}
+                            label="Age"
+                            value={age}
                             onChangeText={(text) => {
-                                setName(text)
-                                if (errors.name) setErrors({ ...errors, name: null })
+                                setAge(text)
+                                if (errors.age) setErrors({ ...errors, age: null })
                             }}
-                            style={styles.input}
+                            style={[styles.input, styles.halfWidth]}
                             activeOutlineColor={theme.colors.primary}
-                            outlineColor={errors.name ? '#FF5252' : theme.colors.LessOpacity}
+                            outlineColor={errors.age ? '#FF5252' : theme.colors.LessOpacity}
                             theme={{ roundness: 12 }}
                             textColor={theme.colors.text}
-                            left={<TextInput.Icon icon="account" color={theme.colors.text} />}
-                            error={!!errors.name}
+                            keyboardType='number-pad'
+                            left={<TextInput.Icon icon="calendar" color={theme.colors.text} />}
+                            error={!!errors.age}
                         />
-                        {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
-
-                        <View style={styles.row}>
-                            <TextInput
-                                mode="outlined"
-                                label="Age"
-                                value={age}
-                                onChangeText={(text) => {
-                                    setAge(text)
-                                    if (errors.age) setErrors({ ...errors, age: null })
-                                }}
-                                style={[styles.input, styles.halfWidth]}
-                                activeOutlineColor={theme.colors.primary}
-                                outlineColor={errors.age ? '#FF5252' : theme.colors.LessOpacity}
-                                theme={{ roundness: 12 }}
-                                textColor={theme.colors.text}
-                                keyboardType='number-pad'
-                                left={<TextInput.Icon icon="calendar" color={theme.colors.text} />}
-                                error={!!errors.age}
-                            />
-
-                            <TextInput
-                                mode="outlined"
-                                label="Height"
-                                value={height}
-                                onChangeText={setHeight}
-                                style={[styles.input, styles.halfWidth]}
-                                activeOutlineColor={theme.colors.primary}
-                                outlineColor={theme.colors.LessOpacity}
-                                theme={{ roundness: 12 }}
-                                textColor={theme.colors.text}
-                                keyboardType='default'
-                                right={<TextInput.Affix text="cm" />}
-                                left={<TextInput.Icon icon="human-male-height" color={theme.colors.text} />}
-                            />
-                        </View>
-                        {errors.age && <Text style={styles.errorText}>{errors.age}</Text>}
-
-                        {renderDropdown(search, 'What are you looking for?', lookingFor, setLookingFor, false, 'lookingFor')}
-
-                        <Text style={styles.sectionTitle}>Location</Text>
-
-                        <View style={styles.row}>
-                            <TextInput
-                                mode="outlined"
-                                label="City"
-                                value={city}
-                                onChangeText={setCity}
-                                style={[styles.input, styles.halfWidth]}
-                                activeOutlineColor={theme.colors.primary}
-                                outlineColor={theme.colors.LessOpacity}
-                                theme={{ roundness: 12 }}
-                                textColor={theme.colors.text}
-                                left={<TextInput.Icon icon="city" color={theme.colors.text} />}
-                            />
-
-                            <TextInput
-                                mode="outlined"
-                                label="State"
-                                value={state}
-                                onChangeText={setState}
-                                style={[styles.input, styles.halfWidth]}
-                                activeOutlineColor={theme.colors.primary}
-                                outlineColor={theme.colors.LessOpacity}
-                                theme={{ roundness: 12 }}
-                                textColor={theme.colors.text}
-                                left={<TextInput.Icon icon="map-marker" color={theme.colors.text} />}
-                            />
-                        </View>
-
-                        <Text style={styles.sectionTitle}>Lifestyle</Text>
-
-                        <View style={styles.row}>
-                            {renderDropdown(consumption, 'Drinking Habits', drinkingHabit, setDrinkingHabit, true)}
-                            {renderDropdown(consumption, 'Smoking Habits', smokingHabit, setSmokingHabit, true)}
-                        </View>
-
-                        {renderDropdown(relation, 'Relationship Status', relationshipStatus, setRelationshipStatus)}
-
-                        <Text style={styles.sectionTitle}>About You</Text>
 
                         <TextInput
                             mode="outlined"
-                            label="Tell potential matches about yourself..."
-                            value={bio}
-                            onChangeText={setBio}
-                            style={[styles.input, styles.bioInput]}
+                            label="Height"
+                            value={height}
+                            onChangeText={setHeight}
+                            style={[styles.input, styles.halfWidth]}
                             activeOutlineColor={theme.colors.primary}
                             outlineColor={theme.colors.LessOpacity}
                             theme={{ roundness: 12 }}
                             textColor={theme.colors.text}
-                            multiline
-                            numberOfLines={4}
-                            placeholder="Short note on yourself..."
-                            left={<TextInput.Icon icon="text" color={theme.colors.text} />}
+                            keyboardType='default'
+                            right={<TextInput.Affix text="cm" />}
+                            left={<TextInput.Icon icon="human-male-height" color={theme.colors.text} />}
+                            error={!!errors.height}
                         />
                     </View>
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity onPress={personalDetails} style={styles.button}>
-                            <LinearGradient
-                                colors={[theme.colors.primary, theme.colors.primary + 'DD']}
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 0 }}
-                                style={styles.buttonContent}
-                            >
-                                <Text style={styles.buttonText}>Next ➜</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
+
+                    {/* Location */}
+                    <Text style={styles.sectionTitle}>Location</Text>
+                    <View style={styles.row}>
+                        <TextInput
+                            mode="outlined"
+                            label="City"
+                            value={city}
+                            onChangeText={setCity}
+                            style={[styles.input, styles.halfWidth]}
+                            activeOutlineColor={theme.colors.primary}
+                            outlineColor={theme.colors.LessOpacity}
+                            theme={{ roundness: 12 }}
+                            textColor={theme.colors.text}
+                            left={<TextInput.Icon icon="city" color={theme.colors.text} />}
+                            error={!!errors.city}
+                        />
+                        <TextInput
+                            mode="outlined"
+                            label="State"
+                            value={state}
+                            onChangeText={setState}
+                            style={[styles.input, styles.halfWidth]}
+                            activeOutlineColor={theme.colors.primary}
+                            outlineColor={theme.colors.LessOpacity}
+                            theme={{ roundness: 12 }}
+                            textColor={theme.colors.text}
+                            left={<TextInput.Icon icon="map-marker" color={theme.colors.text} />}
+                            error={!!errors.state}
+                        />
                     </View>
-                </ScrollView>
+
+                    {/* Bio */}
+                    <Text style={styles.sectionTitle}>About You</Text>
+                    <TextInput
+                        mode="outlined"
+                        label="Tell potential matches about yourself..."
+                        value={bio}
+                        onChangeText={setBio}
+                        style={[styles.input, styles.bioInput]}
+                        activeOutlineColor={theme.colors.primary}
+                        outlineColor={theme.colors.LessOpacity}
+                        theme={{ roundness: 12 }}
+                        textColor={theme.colors.text}
+                        multiline
+                        numberOfLines={4}
+                        placeholder="Short note on yourself..."
+                        left={<TextInput.Icon icon="text" color={theme.colors.text} />}
+                        error={!!errors.bio}
+                    />
+                </View>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity onPress={personalDetails} style={[styles.button]}  >
+                        <Text style={styles.buttonLabel}>Continue</Text>
+                    </TouchableOpacity>
+                </View>
             </KeyboardAvoidingView>
         </SafeAreaView>
     )
