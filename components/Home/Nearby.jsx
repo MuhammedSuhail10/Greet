@@ -17,6 +17,7 @@ const Nearby = () => {
     const [errorMsg, setErrorMsg] = useState(null);
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [locationError, setLocationError] = useState(false);
 
     const styles = StyleSheet.create({
         cardBg: {
@@ -79,9 +80,11 @@ const Nearby = () => {
 
     const getLocation = async () => {
         setLoading(true);
+        setLocationError(false);
         const locationServicesEnabled = await Location.hasServicesEnabledAsync();
         if (!locationServicesEnabled) {
-            setErrorMsg('To discover others close to you, location access is essential. Allow location permissions to start exploring nearby connections.');
+            setErrorMsg("To see who's nearby, turn on location services. Enable location access to start exploring connections around you!");
+            setLocationError(true);
             setLoading(false);
             return;
         }
@@ -120,6 +123,7 @@ const Nearby = () => {
         setLocation(current_loc.coords);
         setLoading(false);
     }
+    
     const getData = async () => {
         getLocation();
         if (!location) {
@@ -150,8 +154,10 @@ const Nearby = () => {
                     <Header font='Jomhuria' title="Nearby" height={hp(10)} />
                     <View style={{ alignItems: 'center', justifyContent: 'center', height: hp(80), paddingInline: 20 }}>
                         <Text style={styles.errorMsg}>{errorMsg}</Text>
-                        <Pressable onPress={() => getData()} style={[styles.button, { marginTop: 15 }]}  >
-                            <Text style={styles.buttonLabel}>Try Again</Text>
+                        <Pressable onPress={() => locationError ? IntentLauncher.startActivityAsync(IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS) : getData()} style={[styles.button, { marginTop: 15 }]} >
+                          <Text style={styles.buttonLabel}>
+                            {locationError ? 'Open Location Settings' : 'Try Again'}
+                          </Text>
                         </Pressable>
                     </View>
                 </>
