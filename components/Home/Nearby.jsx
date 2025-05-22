@@ -17,6 +17,7 @@ const Nearby = () => {
     const [errorMsg, setErrorMsg] = useState(null);
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [locationError, setLocationError] = useState(false);
 
     const styles = StyleSheet.create({
         cardBg: {
@@ -81,18 +82,18 @@ const Nearby = () => {
         setLoading(true);
         const locationServicesEnabled = await Location.hasServicesEnabledAsync();
         if (!locationServicesEnabled) {
-            setErrorMsg('Location services are disabled. Please enable them in your device settings and try again.');
-            setLoading(false);
+            setErrorMsg("To see who's nearby, turn on location services. Enable location access to start exploring connections around you!");
+            setLocationError(true); setLoading(false);
             return;
         }
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
-            setErrorMsg('Permission to access location was denied. Change the permission in settings.')
+            setErrorMsg('You’ve denied location access, which is required to find nearby people. Please update your settings to allow location permissions.')
             setLoading(false);
             if (Platform.OS === 'ios') {
                 Alert.alert(
                     "Location Permission Required",
-                    "Please enable location permissions in your device settings to use this feature.",
+                    "You’ve denied location access, which is required to find nearby people. Please update your settings to allow location permissions.",
                     [
                         { text: "Cancel", style: "cancel" },
                         { text: "Open Settings", onPress: () => Linking.openSettings() }
@@ -102,7 +103,7 @@ const Nearby = () => {
             else if (Platform.OS === 'android') {
                 Alert.alert(
                     "Location Permission Required",
-                    "Please enable location permissions in your app settings to use this feature.",
+                    "You’ve denied location access, which is required to find nearby people. Please update your settings to allow location permissions.",
                     [
                         { text: "Cancel", style: "cancel" },
                         {
@@ -156,10 +157,12 @@ const Nearby = () => {
                     ) : (
                         <>
                             <Header font='Jomhuria' title="Nearby" height={hp(10)} />
-                            <View style={{ alignItems: 'center', justifyContent: 'center', height: hp(80), paddingHorizontal: 20 }}>
+                            <View style={{ alignItems: 'center', justifyContent: 'center', height: hp(80), paddingInline: 20 }}>
                                 <Text style={styles.errorMsg}>{errorMsg}</Text>
-                                <Pressable onPress={() => getData()} style={[styles.button, { marginTop: 20 }]}>
-                                    <Text style={styles.buttonLabel}>Try Again</Text>
+                                <Pressable onPress={() => locationError ? (Platform.OS === 'android' ? IntentLauncher.startActivityAsync(IntentLauncher.ACTION_LOCATION_SOURCE_SETTINGS) : Linking.openURL('app-settings:')) : getData()} style={[styles.button, { marginTop: 15 }]} >
+                                    <Text style={styles.buttonLabel}>
+                                        {locationError ? 'Open Location Settings' : 'Try Again'}
+                                    </Text>
                                 </Pressable>
                             </View>
                         </>
