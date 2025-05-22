@@ -81,18 +81,18 @@ const Nearby = () => {
         setLoading(true);
         const locationServicesEnabled = await Location.hasServicesEnabledAsync();
         if (!locationServicesEnabled) {
-            setErrorMsg('Location services are disabled. Please enable them in your device settings.');
+            setErrorMsg('To discover others close to you, location access is essential. Allow location permissions to start exploring nearby connections.');
             setLoading(false);
             return;
         }
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
-            setErrorMsg('Permission to access location was denied. Change the permission in settings.')
+            setErrorMsg('You’ve denied location access, which is required to find nearby people. Please update your settings to allow location permissions.')
             setLoading(false);
             if (Platform.OS === 'ios') {
                 Alert.alert(
                     "Location Permission Required",
-                    "Please enable location permissions in your device settings to use this feature.",
+                    "You’ve denied location access, which is required to find nearby people. Please update your settings to allow location permissions.",
                     [
                         { text: "Cancel", style: "cancel" },
                         { text: "Open Settings", onPress: () => Linking.openSettings() }
@@ -102,7 +102,7 @@ const Nearby = () => {
             else if (Platform.OS === 'android') {
                 Alert.alert(
                     "Location Permission Required",
-                    "Please enable location permissions in your app settings to use this feature.",
+                    "You’ve denied location access, which is required to find nearby people. Please update your settings to allow location permissions.",
                     [
                         { text: "Cancel", style: "cancel" },
                         {
