@@ -36,9 +36,9 @@ const Home = () => {
         <View key="1" style={{}}>
           <Explore />
         </View>
-        <View key="2" >
+        {/* <View key="2" >
           <Nearby />
-        </View>
+        </View> */}
       </PagerView>
     </SafeAreaView>
   );

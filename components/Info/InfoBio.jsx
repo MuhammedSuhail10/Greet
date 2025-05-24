@@ -21,7 +21,7 @@ const InfoBio = () => {
         text: {
             color: theme.colors.text,
             fontFamily: 'Poppins',
-            fontSize: 16,
+            fontSize: 17,
             paddingTop: 10
         },
         sub: {
@@ -31,7 +31,7 @@ const InfoBio = () => {
     return (
         <View style={styles.main}>
             <View style={styles.sub}>
-                <Text style={{ ...styles.text, fontSize: 21, fontWeight: theme.fontWeights.medium }}>Bio</Text>
+                <Text style={{ ...styles.text, fontSize: 21, fontWeight: theme.fontWeights.extrabold }}>Bio</Text>
                 {/* <Icon name="bio" fill={theme.colors.primary} size="40" strokeWidth="1" /> */}
                 <Text style={{ ...styles.text }}>kds dfik df ff d dg b dfvb df fvdf vdfv vf vdfv fv fv df vdf vfbv fbv fvdfv  ffv </Text>
             </View>

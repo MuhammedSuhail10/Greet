@@ -249,7 +249,7 @@ const personal = () => {
                             outlineColor={theme.colors.LessOpacity}
                             theme={{ roundness: 12 }}
                             textColor={theme.colors.text}
-                            keyboardType='default'
+                            keyboardType='number-pad'
                             right={<TextInput.Affix text="cm" />}
                             left={<TextInput.Icon icon="human-male-height" color={theme.colors.text} />}
                             error={!!errors.height}

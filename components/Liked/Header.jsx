@@ -24,7 +24,7 @@ const Header = ({ height, title }) => {
     return (
         <View style={{ height: { height }, ...styles.bg }}>
             <View style={{ width: wp(100), flexDirection: 'column', justifyContent: 'center' }}>
-                <Text style={{ ...styles.text, }}>Follows</Text>
+                <Text style={{ ...styles.text, }}>Interests</Text>
             </View>
         </View>
     )

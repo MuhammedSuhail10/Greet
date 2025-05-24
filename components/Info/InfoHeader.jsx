@@ -49,7 +49,7 @@ const InfoHeader = () => {
             <View style={styles.topIcons}>
                 <Link href="../" asChild>
                     <TouchableOpacity style={styles.iconBg} >
-                        <Icon name="back" fill={theme.colors.text} size="20" strokeWidth="1" />
+                        <Icon name="back" fill="#ffff" size="20" strokeWidth="1" />
                     </TouchableOpacity>
                 </Link>
             </View>

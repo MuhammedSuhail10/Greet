@@ -21,7 +21,7 @@ const InfoBasics = () => {
         text: {
             color: theme.colors.text,
             fontFamily: 'Poppins',
-            fontSize: 16,
+            fontSize: 17,
         },
         sub: {
             margin: 10,
@@ -29,7 +29,7 @@ const InfoBasics = () => {
     })
     return (
         <View style={styles.main}>
-            <Text style={{ ...styles.text, fontSize: 21, fontWeight: theme.fontWeights.medium }}>Basics</Text>
+            <Text style={{ ...styles.text, fontSize: 21, fontWeight: theme.fontWeights.extrabold }}>Basics</Text>
             <View style={styles.sub}>
                 <Text style={{ ...styles.text }}>📍  Kakkanad, Ernakulam</Text>
                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 30 }}>

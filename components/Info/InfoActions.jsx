@@ -17,9 +17,9 @@ const InfoActions = () => {
         },
         name: {
             color: theme.colors.text,
-            fontFamily: 'Outfit',
-            fontSize: theme.fontSizes['2xl'],
-            fontWeight: theme.fontWeights.medium,
+            fontFamily: 'Poppins',
+            fontSize: theme.fontSizes['xl'],
+            fontWeight: theme.fontWeights.semibold,
         }
     })
     const changeFav = () => {

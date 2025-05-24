@@ -21,6 +21,7 @@ const FAB = ({ text, bottom }) => {
       zIndex: 3
     },
     text: {
+      color: "#fff",
       fontFamily: 'Poppins',
       fontSize: theme.fontSizes.lg,
       fontWeight: theme.fontWeights.medium,

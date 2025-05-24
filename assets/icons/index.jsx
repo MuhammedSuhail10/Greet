@@ -18,6 +18,7 @@ import Recent from './Recent';
 import Search from './Search';
 import AddProfile from './AddProfile';
 import Phone from './Phone';
+import Block from './Block';
 
 const icons = {
     home: HomeIcon,
@@ -38,6 +39,7 @@ const icons = {
     search: Search,
     requests: AddProfile,
     phone: Phone,
+    block: Block,
 }
 
 const Icon = ({ name, ...props }) => {

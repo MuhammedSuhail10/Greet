@@ -11,11 +11,11 @@ const ExploreCard = ({ item }) => {
     const styles = StyleSheet.create({
         cardBg: {
             margin: 10,
-            marginTop: 15,
+            marginTop: hp(3),
             width: wp(95),
         },
         image: {
-            height: hp(70),
+            height: hp(72),
             borderRadius: 20,
             width: '100%',
             overflow: 'hidden'
@@ -26,20 +26,26 @@ const ExploreCard = ({ item }) => {
         },
         button: {
             position: 'absolute',
-            bottom: wp(3),
+            bottom: wp(5),
             display: 'flex',
             flexDirection: 'row',
             justifyContent: "center",
             alignItems: 'center',
             zIndex: 3,
-            width: wp(18),
-            height: hp(8),
+            width: wp(22),
+            height: hp(10),
+            borderWidth: 0.2,
+            borderColor: "#fff",
             borderRadius: theme.borderRadius.full,
-            backgroundColor: theme.colors.inverted,
+            // backgroundColor: theme.colors.inverted,
             opacity: 0.9
         },
         button2: {
             right: wp(3),
+            backgroundColor: theme.colors.primary,
+        },
+        button3: {
+            left: wp(3),
             backgroundColor: theme.colors.secondaryBg,
         },
         text: {
@@ -94,7 +100,10 @@ const ExploreCard = ({ item }) => {
                 </View>
             </TouchableOpacity>
             <View style={{ ...styles.button2, ...styles.button }}>
-                <Icon name="heart_fill" size="28" fill={theme.colors.text} strokeWidth="1" />
+                <Icon name="heart_fill" size="40" fill="#ffff" strokeWidth="1" />
+            </View>
+            <View style={{ ...styles.button3, ...styles.button }}>
+                <Icon name="block" size="40" strokeWidth="1" />
             </View>
         </View>
     )

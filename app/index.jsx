@@ -22,8 +22,8 @@ const Index = () => {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      // router.replace('/home');
-      router.replace('/landing/landing_1');
+      router.replace('/home');
+      // router.replace('/landing/landing_1');
     }, 1000);
     return () => clearTimeout(timeout);
   }, [router]);

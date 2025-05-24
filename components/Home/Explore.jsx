@@ -23,51 +23,6 @@ const Explore = () => {
             name: "Muhammed Suhail Muha",
             age: 25,
         },
-        {
-            id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-            name: "Suhail",
-            age: 22,
-        },
-        {
-            id: '58694a0f-3da1-471f-bd96-145571e29d72',
-            name: "Suhail",
-            age: 30,
-        },
-        {
-            id: '58694a0f-3da1-471f-bd96-145571e29d78',
-            name: "Suhail",
-            age: 40,
-        },
-        {
-            id: '58694a0f-3da1-471f-bd96-145571e29d70',
-            name: "Suhail",
-            age: 10,
-        },
-        {
-            id: '58694a0f-3da1-471f-bd96-145571e29d99',
-            name: "Suhail",
-            age: 42,
-        },
-        {
-            id: '58694a0f-3da1-471f-bd96-145571e29d7sdf',
-            name: "Suhail",
-            age: 31,
-        },
-        {
-            id: '58694a0f-3da1-471f-bd96-145571e29d9vv',
-            name: "Suhail",
-            age: 33,
-        },
-        {
-            id: '58694a0f-3da1-471f-bd96-145571e29d7ddf',
-            name: "Suhail",
-            age: 44,
-        },
-        {
-            id: '58694a0f-3da1-471f-bd96-145571e29dvs9vv',
-            name: "Muhammed Suhail",
-            age: 62,
-        },
     ];
     const onRefresh = useCallback(async () => {
         setReload(true);
