@@ -9,6 +9,9 @@ const Notifications = () => {
     const theme = useTheme();
     const dark = isDarkMode();
     const styles = StyleSheet.create({
+        cardBg: {
+            margin: 10
+        }
     })
     const data = [
         {
@@ -73,7 +76,7 @@ const Notifications = () => {
     )
 }
 
-export default Notifications
+export default Notifications;
 
 
 const NotificationCard = ({ item }) => {

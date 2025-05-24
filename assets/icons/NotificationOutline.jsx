@@ -3,7 +3,6 @@ import Svg, { Path, Rect } from "react-native-svg";
 
 const NotificationOutline = (props) => (
   <Svg
-    fill="#000000"
     width="800px"
     height="800px"
     viewBox="0 0 24 24"
@@ -23,9 +22,6 @@ const NotificationOutline = (props) => (
     <Path
       id="primary"
       d="M20.09,13.67,19,12.59V9A7,7,0,0,0,5,9v3.59L3.91,13.67A3.13,3.13,0,0,0,6.12,19H17.88a3.13,3.13,0,0,0,2.21-5.33Z"
-      style={{
-        fill: "rgb(0, 0, 0)",
-      }}
     />
   </Svg>
 );

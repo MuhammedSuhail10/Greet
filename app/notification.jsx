@@ -21,11 +21,8 @@ const notification = () => {
     return (
         <SafeAreaView style={styles.bg}>
             <StatusBar style={dark ? 'light' : 'dark'} />
-            {/* <ScrollView> */}
             <Header />
-            <Requests />
             <Notifications />
-            {/* </ScrollView> */}
         </SafeAreaView>
     )
 }

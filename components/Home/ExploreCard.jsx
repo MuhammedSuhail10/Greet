@@ -15,7 +15,7 @@ const ExploreCard = ({ item }) => {
             width: wp(95),
         },
         image: {
-            height: hp(72),
+            height: hp(75),
             borderRadius: 20,
             width: '100%',
             overflow: 'hidden'
@@ -46,7 +46,7 @@ const ExploreCard = ({ item }) => {
         },
         button3: {
             left: wp(3),
-            backgroundColor: theme.colors.secondaryBg,
+            backgroundColor: "#fff",
         },
         text: {
             fontFamily: 'Poppins',
@@ -71,7 +71,7 @@ const ExploreCard = ({ item }) => {
         ageText: {
             fontSize: 21,
             fontWeight: '400',
-            color: theme.colors.text ,
+            color: theme.colors.text,
             fontFamily: 'Poppins',
         },
     })
@@ -98,13 +98,13 @@ const ExploreCard = ({ item }) => {
                         </View>
                     </ImageBackground>
                 </View>
+                <View style={{ ...styles.button2, ...styles.button }}>
+                    <Icon name="heart_fill" size="40" fill="#ffff" strokeWidth="1" />
+                </View>
+                <View style={{ ...styles.button3, ...styles.button }}>
+                    <Icon name="block" size="40" strokeWidth="1" />
+                </View>
             </TouchableOpacity>
-            <View style={{ ...styles.button2, ...styles.button }}>
-                <Icon name="heart_fill" size="40" fill="#ffff" strokeWidth="1" />
-            </View>
-            <View style={{ ...styles.button3, ...styles.button }}>
-                <Icon name="block" size="40" strokeWidth="1" />
-            </View>
         </View>
     )
 }
