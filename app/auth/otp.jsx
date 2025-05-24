@@ -164,8 +164,9 @@ const otp = () => {
             if (status == 511) setError('Check your internet connection and try again.');
             else if (status == 501) setError('Request timed out. Please try again.');
             else setError(data?.message || "Something went wrong.");
-            return;
+            // return;
         }
+         router.replace("/details/personal");
         if (data?.token) TokenService.saveTokens(data.token, data.refreshToken);
         if (status == 204) router.replace("/details/personal");
         if (status == 200) router.replace("/home");

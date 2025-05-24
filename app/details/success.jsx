@@ -242,8 +242,8 @@ const success = () => {
                             color={theme.colors.primary}
                             style={styles.highlightIcon}
                         />
-                        <Text style={styles.highlightTitle}>Local Events</Text>
-                        <Text style={styles.highlightDesc}>Meet people near you</Text>
+                        <Text style={styles.highlightTitle}>Make Memories</Text>
+                        <Text style={styles.highlightDesc}>Make strangers, friends.</Text>
                     </View>
 
                     <View style={styles.highlight}>
