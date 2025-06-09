@@ -19,6 +19,8 @@ import Search from './Search';
 import AddProfile from './AddProfile';
 import Phone from './Phone';
 import Block from './Block';
+import MenuIcon from './Menu';
+import Close from './Close';
 
 const icons = {
     home: HomeIcon,
@@ -40,6 +42,8 @@ const icons = {
     requests: AddProfile,
     phone: Phone,
     block: Block,
+    menu: MenuIcon,
+    close: Close,
 }
 
 const Icon = ({ name, ...props }) => {

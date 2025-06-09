@@ -204,7 +204,7 @@ const personal = () => {
                     {/* Name */}
                     <TextInput
                         mode="outlined"
-                        label="Full Name"
+                        label="First Name"
                         value={name}
                         onChangeText={(text) => {
                             setName(text)

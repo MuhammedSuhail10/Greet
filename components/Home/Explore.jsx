@@ -5,6 +5,7 @@ import { useTheme } from '../../constants/theme'
 import { StyleSheet } from 'react-native'
 import { hp, wp } from '../../helpers/common'
 import ExploreCard from './ExploreCard'
+import Footer from './Footer'
 
 const Explore = () => {
     const theme = useTheme();
@@ -19,8 +20,8 @@ const Explore = () => {
     })
     const data = [
         {
-            id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-            name: "Muhammed Suhail Muha",
+            id: '1',
+            name: "Muhammed",
             age: 25,
         },
     ];
@@ -29,19 +30,25 @@ const Explore = () => {
     });
     return (
         <FlatList
-            refreshControl={
-                <RefreshControl
-                    refreshing={reload}
-                    onRefresh={onRefresh}
-                    colors={['#2196F3']}
-                    tintColor="#2196F3"
-                />
-            }
+            // refreshControl={
+            //     <RefreshControl
+            //         refreshing={reload}
+            //         onRefresh={onRefresh}
+            //         colors={['#2196F3']}
+            //         tintColor="#2196F3"
+            //     />
+            // }
             ListHeaderComponent={<Header font='Jomhuria' title="Meet And Greet" height={hp(10)} />}
+            ListFooterComponent={<Footer />}
             data={data}
             renderItem={({ item }) => <ExploreCard item={item} />}
             keyExtractor={(item) => item.id.toString()}
             contentContainerStyle={styles.cardBg}
+            ListEmptyComponent={() => (
+                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', height: hp(80), width: wp(100) }}>
+                    <Text style={{ fontSize: 16, color: theme.colors.text }}>No data available</Text>
+                </View>
+            )}
         />
     )
 }

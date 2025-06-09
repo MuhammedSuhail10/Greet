@@ -11,46 +11,17 @@ const ExploreCard = ({ item }) => {
     const styles = StyleSheet.create({
         cardBg: {
             margin: 10,
-            marginTop: hp(3),
             width: wp(95),
         },
         image: {
-            height: hp(75),
+            height: hp(52.5),
             borderRadius: 20,
             width: '100%',
             overflow: 'hidden'
         },
-        basics: {
-            // marginBlock: 10,
-            backgroundColor: theme.colors.secondaryBg,
-        },
-        button: {
-            position: 'absolute',
-            bottom: wp(5),
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: "center",
-            alignItems: 'center',
-            zIndex: 3,
-            width: wp(22),
-            height: hp(10),
-            borderWidth: 0.2,
-            borderColor: "#fff",
-            borderRadius: theme.borderRadius.full,
-            // backgroundColor: theme.colors.inverted,
-            opacity: 0.9
-        },
-        button2: {
-            right: wp(3),
-            backgroundColor: theme.colors.primary,
-        },
-        button3: {
-            left: wp(3),
-            backgroundColor: "#fff",
-        },
         text: {
             fontFamily: 'Poppins',
-            fontSize: theme.fontSizes.lg,
+            fontSize: theme.fontSizes['2xl'],
             fontWeight: theme.fontWeights.medium,
             marginTop: 7,
         },
@@ -60,50 +31,59 @@ const ExploreCard = ({ item }) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-            paddingInline: 15,
-            backgroundColor: theme.colors.secondaryBg,
+            paddingInline: 10,
         },
         nameText: {
             fontFamily: 'Poppins',
-            fontSize: 21,
-            color: theme.colors.text,
+            fontSize: 25,
+            color: theme.colors.primary,
         },
         ageText: {
-            fontSize: 21,
+            fontSize: 25,
             fontWeight: '400',
             color: theme.colors.text,
             fontFamily: 'Poppins',
+        },
+        button: {
+            position: 'absolute',
+            bottom: hp(0.25),
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: "center",
+            alignItems: 'center',
+            zIndex: 3,
+            width: wp(22),
+            height: hp(10),
+        },
+        button2: {
+            right: wp(0.25),
         },
     })
     const navigation = useNavigation();
     return (
         <View style={{ ...styles.cardBg }}>
+            <View style={styles.gradientOverlay}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                    <Text style={styles.nameText} numberOfLines={1} ellipsizeMode="tail">{item.name}, </Text>
+                    {item.age ? <Text style={styles.ageText}>{item.age}</Text> : null}
+                </View>
+                <Pressable onPress={() => navigation.navigate('user_details', { item: item })} >
+                    <Icon name="dots" size="28" fill={theme.colors.text} strokeWidth="1" />
+                </Pressable>
+            </View>
             <TouchableOpacity onPress={() => navigation.navigate('user_details', { item: item })}>
-                <View style={{ position: 'relative' }}>
-                    <ImageBackground
-                        style={styles.image}
-                        source="https://imgs.search.brave.com/y7FJ6RcZwImUgBuWCg8BO8-jZ5FMLV_NR2dN30NYsig/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLWNsYW4u/Y29tL3dwLWNvbnRl/bnQvdXBsb2Fkcy8y/MDI1LzAxL2x1ZmZ5/LW9wdGltaXN0aWMt/bWF0Y2hpbmctd2Fs/bHBhcGVyLTItcHJl/dmlldy5qcGc"
-                        contentFit="cover"
-                        imageStyle={{ borderRadius: 20 }}
-                    >
-                        <View style={styles.gradientOverlay}>
-                            <View style={styles.userInfoContainer}>
-                                <Text style={styles.nameText} numberOfLines={1} ellipsizeMode="tail">
-                                    {item.name}{item.age ? <Text style={styles.ageText}>, {item.age}</Text> : null}
-                                </Text>
-                            </View>
-                            <Pressable onPress={() => navigation.navigate('user_details', { item: item })} >
-                                <Icon name="dots" size="28" fill={theme.colors.text} strokeWidth="1" />
-                            </Pressable>
-                        </View>
-                    </ImageBackground>
-                </View>
-                <View style={{ ...styles.button2, ...styles.button }}>
-                    <Icon name="heart_fill" size="40" fill="#ffff" strokeWidth="1" />
-                </View>
-                <View style={{ ...styles.button3, ...styles.button }}>
-                    <Icon name="block" size="40" strokeWidth="1" />
-                </View>
+                <Image
+                    style={styles.image}
+                    source="https://imgs.search.brave.com/y7FJ6RcZwImUgBuWCg8BO8-jZ5FMLV_NR2dN30NYsig/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJzLWNsYW4u/Y29tL3dwLWNvbnRl/bnQvdXBsb2Fkcy8y/MDI1LzAxL2x1ZmZ5/LW9wdGltaXN0aWMt/bWF0Y2hpbmctd2Fs/bHBhcGVyLTItcHJl/dmlldy5qcGc"
+                    placeholder="https://picsum.photos/seed/696/3000/2000"
+                    contentFit="cover"
+                    transition={1000}
+                />
+                <TouchableOpacity onPress={() => navigation.navigate('user_details', { item: item })}>
+                    <View style={{ ...styles.button2, ...styles.button }}>
+                        <Icon name="menu" size="45" fill={theme.colors.secondaryBg} stroke={theme.colors.secondaryBg} strokeWidth="1" />
+                    </View>
+                </TouchableOpacity>
             </TouchableOpacity>
         </View>
     )

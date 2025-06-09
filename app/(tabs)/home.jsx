@@ -32,14 +32,14 @@ const Home = () => {
   return (
     <SafeAreaView style={styles.bg} edges={['top']}>
       <StatusBar style={dark ? 'light' : 'dark'} />
-      <PagerView style={{ flex: 1 }} initialPage={0} >
+      {/* <PagerView style={{ flex: 1 }} initialPage={0} > */}
         <View key="1" style={{}}>
           <Explore />
         </View>
         {/* <View key="2" >
           <Nearby />
         </View> */}
-      </PagerView>
+      {/* </PagerView> */}
     </SafeAreaView>
   );
 }

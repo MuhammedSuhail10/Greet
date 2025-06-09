@@ -10,8 +10,8 @@ const Block = (props) => (
         xmlns="http://www.w3.org/2000/svg"
         {...props}
     >
-        <Circle cx={12} cy={12} r={10} stroke="#000000" strokeWidth={2} />
-        <Path d="M5 19L19 5" stroke="#000000" strokeWidth={2} />
+        <Circle cx={12} cy={12} r={10} strokeWidth={2} />
+        <Path d="M5 19L19 5"  strokeWidth={2} />
     </Svg>
 );
 
